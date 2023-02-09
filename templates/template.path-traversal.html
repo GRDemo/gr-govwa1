@@ -1,0 +1,46 @@
+{{define "template.path-traversal"}} {{template "template.header" .}} {{template "template.sidebar" .}}
+<!-- Modal -->
+<div id="profile" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">My Profile:</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+      
+        </div>
+      </div>
+<div class="col-md-9">
+    <div class="panel panel-primary">
+        <div class="panel-heading">Path Traversal</div>
+        <div class="panel-body">
+            <div class="pnl">
+                <!-- <span class="subheader">SQL Injection Vulnerability</span> -->
+								<p >Hey! Look at this epic website I made! It tells you how big your files are!</p>
+                <div class="well">
+									<form class="form-inline" method="POST" enctype='multipart/form-data'>
+											<label for="file" style="color:#428bca;font-family:Open Sans; font-weight:500">Upload a file here</label>
+											<input type="file" class="form-control" name="file">
+											<input type="submit" class="btn btn-small btn-primary" value="Upload">
+                   </form>
+                </div>
+                <div class="more-info">
+									{{ if .upload_size }}
+									<div class="alert alert-info">File size: {{ .upload_size }} bytes</div>
+									{{ end }}
+									{{ if .error }}
+									<div class="alert alert-danger">Error: {{.error}}</div>
+									{{ end }}
+                </div>    
+            </div>
+        </div>
+    </div>
+</div>
+
+{{template "template.footer"}} {{ end }}

@@ -1,23 +1,35 @@
 package util
 
 import (
-	"log"
-	"net/http"
 	"encoding/json"
 	"html/template"
+	"log"
+	"net/http"
 
 	"github.com/govwa/user/session"
 )
 
+func increment(num int) int {
+	return num + 1
+}
+
 func SafeRender(w http.ResponseWriter, r *http.Request, name string, data map[string]interface{}) {
 
 	s := session.New()
-	sid := s.GetSession(r, "id")//make uid available to all page
+	sid := s.GetSession(r, "id") //make uid available to all page
 	data["uid"] = sid
 
-	template := template.Must(template.ParseGlob("templates/*"))
-	err := template.ExecuteTemplate(w, name, data)
-	if err != nil{
+	funcs := template.FuncMap(make(map[string]interface{}))
+	funcs["inc"] = increment
+
+	template := template.New(name).Funcs(funcs)
+	template, err := template.ParseGlob("templates/*")
+	if err != nil {
+		log.Println(err.Error())
+	}
+
+	err = template.ExecuteTemplate(w, name, data)
+	if err != nil {
 		log.Println(err.Error())
 	}
 }
@@ -41,6 +53,6 @@ func UnSafeRender(w http.ResponseWriter, name string, data ...interface{}) {
 	template.ExecuteTemplate(w, name, data)
 }
 
-func ToHTML(text string)template.HTML{
+func ToHTML(text string) template.HTML {
 	return template.HTML(text)
 }

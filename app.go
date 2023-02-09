@@ -12,8 +12,10 @@ import (
 	"github.com/govwa/util"
 	"github.com/govwa/util/config"
 	"github.com/govwa/util/middleware"
+	"github.com/govwa/vulnerability/cmdi"
 	"github.com/govwa/vulnerability/csa"
 	"github.com/govwa/vulnerability/idor"
+	"github.com/govwa/vulnerability/path_traversal"
 	"github.com/govwa/vulnerability/sqli"
 	"github.com/govwa/vulnerability/xss"
 )
@@ -55,6 +57,7 @@ func main() {
 	csa := csa.New()
 	setup := setup.New()
 	setting := setting.New()
+	cmdi := cmdi.New()
 
 	router.ServeFiles("/public/*filepath", http.Dir("public/"))
 	router.GET("/", mw.LoggingMiddleware(mw.AuthCheck(indexHandler)))
@@ -67,6 +70,8 @@ func main() {
 	csa.SetRouter(router)
 	setup.SetRouter(router)
 	setting.SetRouter(router)
+	cmdi.SetRouter(router)
+	path_traversal.New().SetRouter(router)
 
 	s := http.Server{
 		Addr:    fmt.Sprintf(":%s", config.Cfg.Webport),

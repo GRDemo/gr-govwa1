@@ -28,12 +28,16 @@ WORKDIR /dist
 RUN cp /app/main .
 
 # Build a small image
-FROM scratch
+FROM alpine
 
+RUN apk add ripgrep
+
+run mkdir uploads
 COPY --from=builder /dist/main /
 COPY ./config/config.json /config/config.json
 COPY ./templates/* /templates/
 COPY ./public/. /public/
+COPY ./search-data/* ./search-data/
 EXPOSE 8888
 # Command to run
 CMD ["./main"]
