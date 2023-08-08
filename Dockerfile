@@ -28,7 +28,7 @@ WORKDIR /dist
 RUN cp /app/main .
 
 # Build a small image
-FROM alpine
+FROM alpine:3.18.3
 
 RUN apk add ripgrep
 
